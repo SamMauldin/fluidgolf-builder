@@ -75,7 +75,9 @@ exports.build = async ({ files, entrypoint, workPath }) => {
 
   console.log('preparing lambda files...');
   // move all user code to 'user' subdirectory
-  const compiledFiles = { [path.join('user', entrypoint)]: blob };
+  const compiledFiles = { [path.join('user', entrypoint)]: blob,
+    ...(await glob("static/**", entrypoint, "user")),
+    ...(await glob("views/**", entrypoint, "user")) };
   const launcherPath = path.join(__dirname, 'launcher.js');
   let launcherData = await fsp.readFile(launcherPath, 'utf8');
 
